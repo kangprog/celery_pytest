@@ -1,2 +1,4 @@
 celery
 redis
+pytest
+pytest-celery
