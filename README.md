@@ -10,7 +10,7 @@ docker-compose -f docker-compose.yml up -d
 
 ### Celery Command
 ```python
-Celery -A celery_app worker -l info -c 1
+celery -A celery_app worker -l info -c 1
 ```
 
 ### pytest Command
