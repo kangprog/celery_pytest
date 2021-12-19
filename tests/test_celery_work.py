@@ -15,10 +15,11 @@ from tasks.celery_task import work_task
 
 @pytest.mark.usefixtures('celery_session_app')
 @pytest.mark.usefixtures('celery_session_worker')
-class TestCeleryWork():
+class TestCeleryWork:
     def test_celery_work_return_one(self):
         assert work_task.delay(1).get(timeout=10) == 1
         assert work_task.apply_async(args=[1]).get(timeout=10) == 1
+
 
 @pytest.mark.usefixtures('celery_session_app')
 @pytest.mark.usefixtures('celery_session_worker')
