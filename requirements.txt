@@ -2,3 +2,4 @@ celery
 redis
 pytest
 pytest-celery
+pytest-docker-compose

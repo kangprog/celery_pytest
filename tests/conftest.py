@@ -1,4 +1,20 @@
 import pytest
+pytest_plugins = ["docker_compose"]
+
+
+#
+# https://github.com/pytest-docker-compose/pytest-docker-compose
+# 테스트용 docker-compose.yml을 pytest 실행, 동작시 실행, 정지를 해준다.
+# 아래 function에서 사용하는 docker compose 파일은 아래와 같은 경로에 위치해야한다.
+# ./docker-compose.yml
+#
+@pytest.fixture(scope="function")
+def wait_for_docker(function_scoped_container_getter):
+    #
+    # api server 같은 request가 필요한 Container라면,
+    # 여기서 url 리턴하는 로직이 추가되면 된다.
+    #
+    pass
 
 
 @pytest.fixture(scope='session')

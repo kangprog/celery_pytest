@@ -3,17 +3,6 @@
 <br></br>
 ---
 
-### docker compose Command
-```python
-docker-compose -f docker-compose.yml up -d
-```
-
-### Celery Command
-```python
-celery -A celery_app worker -l info -c 1
-```
-
-### pytest Command
-```python
-python -m pytest tests/test_celery_work.py
-```
+### pytest 구동 방법
+- pycharm의 RUN/DEBUG Configuration의 pytest를 이용
+  - tests/test_celery_work.py를 타겟 파일로 지정 후 실행

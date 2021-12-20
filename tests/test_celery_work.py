@@ -1,4 +1,6 @@
 import pytest
+import time
+
 from tasks.celery_task import work_task
 
 
@@ -13,16 +15,31 @@ from tasks.celery_task import work_task
 # 추가로, Task가 shared_task로 정의되어있지 않으면, fixture로 인해 생성된 celery app이 Task를 찾지 못하고 Time out 된다.
 #
 
-@pytest.mark.usefixtures('celery_session_app')
-@pytest.mark.usefixtures('celery_session_worker')
+#
+# usefixtures를 사용해서 celery_session_app, celery_session_worker를 데코레이터 하면,
+# session fixture가 Docker Contaniner를 실행시키는 function fixture보다 먼저 실행된다.
+# Celery Worker가 Broker를 찾지 못해서 Time Out 남.
+#
+# @pytest.mark.usefixtures('celery_session_app')
+# @pytest.mark.usefixtures('celery_session_worker')
 class TestCeleryWork:
-    def test_celery_work_return_one(self):
+    def test_celery_work_return_one(
+            self,
+            wait_for_docker,
+            celery_config,
+            celery_app,
+            celery_worker
+    ):
+
         assert work_task.delay(1).get(timeout=10) == 1
         assert work_task.apply_async(args=[1]).get(timeout=10) == 1
 
 
-@pytest.mark.usefixtures('celery_session_app')
-@pytest.mark.usefixtures('celery_session_worker')
-def test_celery_work_return_two():
+def test_celery_work_return_two(
+        wait_for_docker,
+        celery_config,
+        celery_app,
+        celery_worker
+):
     assert work_task.delay(2).get(timeout=10) == 2
     assert work_task.apply_async(args=[2]).get(timeout=10) == 2
