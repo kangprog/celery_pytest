@@ -22,10 +22,10 @@ from tasks.celery_task import work_task
 #
 # @pytest.mark.usefixtures('celery_session_app')
 # @pytest.mark.usefixtures('celery_session_worker')
+@pytest.mark.usefixtures('wait_for_docker')
 class TestCeleryWork:
     def test_celery_work_return_one(
             self,
-            wait_for_docker,
             celery_config,
             celery_app,
             celery_worker
@@ -34,12 +34,11 @@ class TestCeleryWork:
         assert work_task.delay(1).get(timeout=10) == 1
         assert work_task.apply_async(args=[1]).get(timeout=10) == 1
 
-
-def test_celery_work_return_two(
-        wait_for_docker,
-        celery_config,
-        celery_app,
-        celery_worker
-):
-    assert work_task.delay(2).get(timeout=10) == 2
-    assert work_task.apply_async(args=[2]).get(timeout=10) == 2
+    def test_celery_work_return_two(
+            self,
+            celery_config,
+            celery_app,
+            celery_worker
+    ):
+        assert work_task.delay(2).get(timeout=10) == 2
+        assert work_task.apply_async(args=[2]).get(timeout=10) == 2
