@@ -20,6 +20,10 @@ from tasks.celery_task import work_task
 # session fixture가 Docker Contaniner를 실행시키는 function fixture보다 먼저 실행된다.
 # Celery Worker가 Broker를 찾지 못해서 Time Out 남.
 #
+# celery_session_app, celery_session_worker를 usefixtures로 빼볼려했는데...
+# module fixture보다 session fixture가 더 범위적으로 커서.. 먼저 실행되버린다.
+# 그래서 function level로 실행시킨다.
+#
 # @pytest.mark.usefixtures('celery_session_app')
 # @pytest.mark.usefixtures('celery_session_worker')
 @pytest.mark.usefixtures('wait_for_docker')
@@ -30,7 +34,6 @@ class TestCeleryWork:
             celery_app,
             celery_worker
     ):
-
         assert work_task.delay(1).get(timeout=10) == 1
         assert work_task.apply_async(args=[1]).get(timeout=10) == 1
 
